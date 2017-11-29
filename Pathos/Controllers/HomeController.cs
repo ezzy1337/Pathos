@@ -1,15 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Pathos.Models;
+using Pathos.Models.Settings;
+using Microsoft.Extensions.Options;
 
 namespace Pathos.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly AppSettings _settings;
+
+        public HomeController(IOptions<AppSettings> settings)
+        {
+            _settings = settings.Value;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -18,6 +23,7 @@ namespace Pathos.Controllers
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
+            ViewData["Environment"] = _settings.Environment;
 
             return View();
         }
