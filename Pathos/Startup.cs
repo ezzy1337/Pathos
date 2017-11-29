@@ -18,7 +18,8 @@ namespace Pathos
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
+                .AddEnvironmentVariables()
+                .AddUserSecrets<Startup>();
 
             Configuration = builder.Build();
         }
@@ -32,6 +33,8 @@ namespace Pathos
 
             IConfiguration appSettings = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettings);
+
+            services.Configure<AppSecrets>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

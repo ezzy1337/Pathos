@@ -9,10 +9,12 @@ namespace Pathos.Controllers
     public class HomeController : Controller
     {
         private readonly AppSettings _settings;
+        private readonly AppSecrets _secrets;
 
-        public HomeController(IOptions<AppSettings> settings)
+        public HomeController(IOptions<AppSettings> settings, IOptions<AppSecrets> secrets)
         {
             _settings = settings.Value;
+            _secrets = secrets.Value;
         }
 
         public IActionResult Index()
@@ -22,8 +24,7 @@ namespace Pathos.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
-            ViewData["Environment"] = _settings.Environment;
+            ViewData["Message"] = $"Your super secret password for the {_settings.Environment} environemnt is {_secrets.SamplePassword}.";
 
             return View();
         }
