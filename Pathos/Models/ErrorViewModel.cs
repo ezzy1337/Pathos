@@ -1,5 +1,3 @@
-using System;
-
 namespace Pathos.Models
 {
     public class ErrorViewModel
