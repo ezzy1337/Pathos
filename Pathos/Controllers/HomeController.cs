@@ -1,15 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Pathos.Models;
+using Pathos.Models.Settings;
+using Microsoft.Extensions.Options;
 
 namespace Pathos.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly AppSettings _settings;
+        private readonly AppSecrets _secrets;
+
+        public HomeController(IOptions<AppSettings> settings, IOptions<AppSecrets> secrets)
+        {
+            _settings = settings.Value;
+            _secrets = secrets.Value;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -17,7 +24,7 @@ namespace Pathos.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = $"Your super secret password for the {_settings.Environment} environemnt is {_secrets.SamplePassword}.";
 
             return View();
         }
