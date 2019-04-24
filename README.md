@@ -9,6 +9,7 @@ made him the perfect embodiment of the Greek's idea of Pathos I chose Pathos as 
 
 1. Environment specific config files
 2. Handling Entity Framework Migrations in deployment
-3. Using Secrets Manager to keep ConnectionStrings and Passwords out of version control.
-4. Integrating React.js without loosing ignorning routing options.
-
+3. Unit Testing Controllers and React Views.
+4. Setting up Service Providers
+5. Integrating React.js without loosing ignorning routing options.
+6. Using Secrets Manager to keep ConnectionStrings and Passwords out of version control. 
