@@ -13,3 +13,6 @@ made him the perfect embodiment of the Greek's idea of Pathos I chose Pathos as 
 4. Setting up Service Providers
 5. Integrating React.js without loosing ignorning routing options.
 6. Using Secrets Manager to keep ConnectionStrings and Passwords out of version control. 
+
+## The Project
+Every tutorial for .NET MVC apps is always for blogs, or a classroom or something that conceptually everyone can grasp but is kind of boring. This tutorial will walk you through building the management app for a project I've wanted to implement for a really long timem, GitHub Merit Badges. If you want to know more about the project here is a breif description I wrote up for a Hack-a-thon. Unfortunately the code for detecting, and assigning merit badges has not been started yet. That being said I still need a way to manage the users, badges, and scoreboard as well as provide a way for people to view a users badges.
