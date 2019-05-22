@@ -6,5 +6,9 @@ namespace Pathos.DAL {
     {
         public PathosContext(DbContextOptions<PathosContext> options) : base(options)
         {}
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Badge> Badges { get; set; }
     }
 }
