@@ -36,7 +36,7 @@ namespace Pathos
             services.AddSingleton(Engine.Mapper);
 
             services.AddDbContext<PathosContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("Pathos"))
+                options => options.UseSqlite(Configuration.GetConnectionString("Pathos"))
             );
         }
 
