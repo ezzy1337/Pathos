@@ -13,8 +13,8 @@ namespace Pathos.Controllers
 
         public HomeController(IOptions<AppSettings> settings, IOptions<AppSecrets> secrets)
         {
-            _settings = settings.Value;
-            _secrets = secrets.Value;
+            this._settings = settings.Value;
+            this._secrets = secrets.Value;
         }
 
         public IActionResult Index()
