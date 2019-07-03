@@ -28,9 +28,7 @@ namespace Pathos
         {
             services.AddMvc();
 
-            IConfiguration appSettings = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettings);
-
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.Configure<AppSecrets>(Configuration);
 
             services.AddSingleton(Engine.Mapper);
