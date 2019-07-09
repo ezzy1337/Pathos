@@ -29,7 +29,7 @@ namespace Pathos
             services.AddMvc();
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-            services.Configure<AppSecrets>(Configuration.GetSection("Db"));
+            services.Configure<AppSecrets>(Configuration);
 
             services.AddSingleton(Engine.Mapper);
         }

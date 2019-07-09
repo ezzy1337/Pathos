@@ -24,7 +24,7 @@ namespace Pathos.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = $"Your Db connection string for the {_settings.Environment} environment is {_secrets.PathosConnectionString}.";
+            ViewData["Message"] = $"Your DB connection string for the {_settings.Environment} environment is {_secrets.PathosConnectionString}.";
 
             return View();
         }
