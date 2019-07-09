@@ -9,7 +9,7 @@ namespace Pathos.Models.Mappings
         public ConfigurationProfile()
         {
             CreateMap<IConfiguration, AppSecrets>()
-                        .ForMember(o => o.SamplePassword, opt => opt.MapFrom(src => src["SamplePassword"]));
+                        .ForMember(o => o.PathosConnectionString, opt => opt.MapFrom(src => src["PathosConnectionString"]));
         }
     }
 }

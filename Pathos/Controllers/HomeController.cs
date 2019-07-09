@@ -24,7 +24,7 @@ namespace Pathos.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = $"Your super secret password for the {_settings.Environment} environment is {_secrets.SamplePassword}.";
+            ViewData["Message"] = $"Your Db connection string for the {_settings.Environment} environment is {_secrets.PathosConnectionString}.";
 
             return View();
         }
