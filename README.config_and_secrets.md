@@ -107,7 +107,7 @@ public class HomeController : Controller
 
     public HomeController(IOptions<AppSettings> settings)
     {
-        this._settings = settings.Value; 
+        this._settings = settings.Value;
     }
 }
 ```
@@ -160,7 +160,7 @@ __Protip: Using the same UserSecretsId allows different applications to share se
 ### Setting secrets in Secret Manager
 Secrets can be set using the `dotnet cli` as shown below.
 ```bash
-dotnet user-secrets set Db:PathosConnectionString Pathos.db
+dotnet user-secrets set "PathosConnectionString" "Data Source=Pathos.db"
 ```
 
 ### Accessing Secrets
@@ -200,9 +200,7 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddMvc();
 
-    IConfiguration appSettings = Configuration.GetSection("AppSettings");
-    services.Configure<AppSettings>(appSettings);
-
+    services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
     services.Configure<AppSecrets>(Configuration);// Add this line
 }
 ```
@@ -219,7 +217,7 @@ public HomeController(IOptions<AppSettings> settings, IOptions<AppSecrets> secre
 // Not that the secrets have been injected they are used the same as AppSettings
 public IActionResult About()
 {
-    ViewData["Message"] = $"Your super secret password for the {_settings.Environment} environment is {_secrets.SamplePassword}.";
+    ViewData["Message"] = $"Your DB connection string for the {_settings.Environment} environment is {_secrets.PathosConnectionString}.";
 
     return View();
 }
