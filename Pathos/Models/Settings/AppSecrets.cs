@@ -2,6 +2,6 @@
 {
     public class AppSecrets
     {
-        public string SamplePassword { get; set; }
+        public string PathosConnectionString { get; set; }
     }
 }

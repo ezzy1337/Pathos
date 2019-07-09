@@ -15,7 +15,7 @@ information into version control.
 1. __appsettings.json__ is the base configuration file used for configuration that does
 not change between environments.
 2. __appsettings.{ENV}.json__ is the environment specific configuration file. Conventional
-values for ENV are `development`, `staging`, and `production`.
+values for ENV are `Development`, `Staging`, and `Production`.
 3. __secrets.json__ is a file maintained for you by the `Secrets Manager` plugin. This
 will be covered in more detail later.
 
@@ -39,7 +39,7 @@ public Startup(IConfiguration configuration, IHostingEnvironment env)
 ```
 
 The DOTNETCORE_ENVIRONMENT environment variable can be set in 1 of 2 places. The first
-and preferred is simplay as an environment variable on the system your application will
+and preferred is simply as an environment variable on the system your application will
 be running on. The second is in the `launchsettings.json` file found under the `Properties` folder in the root of your application. I prefer this option for local
 development. An example `launchsettings.json` file is shown below.
 ```JSON
@@ -96,16 +96,19 @@ _NOTE: Any fields not defined in the AppSettings class are ignored during serial
 
 ## Using AppSettings in a Controller
 In any Controller that you want to use the AppSettings you will need to import
-`Microsoft.Extensions.Options` then define IOptions<AppSettings> as a parameter for the
-Controllers constructor as shown.
+`Microsoft.Extensions.Options` then define an `IOptions<AppSettings>` object as a
+parameter for the Controllers constructor as shown.
 ```C#
 using Microsoft.Extensions.Options;
 
-private readonly AppSettings _settings;
-
-public HomeController(IOptions<AppSettings> settings)
+public class HomeController : Controller
 {
-  this._settings = settings.Value; 
+    private readonly AppSettings _settings;
+
+    public HomeController(IOptions<AppSettings> settings)
+    {
+        this._settings = settings.Value; 
+    }
 }
 ```
 
@@ -121,8 +124,9 @@ public IActionResult About()
 ```
 
 # Application Secrets
-There are some values you do not want stored in version control which means they can't be in the usual config files discussed so far. To accomplish this added level of security
-Microsoft provides the `Secret Manager` plugin for Dotnet Core.
+There are some values you do not want stored in version control which means they can't
+be in the config files discussed so far. To accomplish this added level of security
+Microsoft provides the `Secret Manager` plugin.
 
 ## The Nuts and Bolts
 1. Add the following DotNetCli reference to the projects `.csproj` file.
@@ -131,9 +135,9 @@ Microsoft provides the `Secret Manager` plugin for Dotnet Core.
   <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
 <ItemGroup>
 ```
-2. Secrets are stored unencrypted but separate from the project files in the following
-directories Windows=`%APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json`
-Mac/Linux=`~/.microsoft/usersecrets/<user_secrets_id>/secrets.json`
+2. Secrets are stored unencrypted but separate from the project files in
+`%APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json` for Windows
+and  `~/.microsoft/usersecrets/<user_secrets_id>/secrets.json` for Linux/Mac
 3. Secrets can be shared between applications.
 
 ### Setting up Secrets Manager
@@ -153,6 +157,12 @@ storing application secrets._
 __Protip: Using the same UserSecretsId allows different applications to share secrets.__
 
 
+### Setting secrets in Secret Manager
+Secrets can be set using the `dotnet cli` as shown below.
+```bash
+dotnet user-secrets set Db:PathosConnectionString Pathos.db
+```
+
 ### Accessing Secrets
 In much the same way as configuration values secrets need to be serialized into an object
 and injected into Controllers.
@@ -168,7 +178,7 @@ var builder = new ConfigurationBuilder()
     .AddUserSecrets<Startup>(); // Add this line
 ```
 
-Next we need to setup the class that secrets will be serialized to. I like to keep this
+Next we need to create the class that secrets will be serialized to. I like to keep this
 file with the `AppSettings.cs` file created earlier. Create a new file `AppSecrets.cs`
 under `Models/Settings` if you wish to organize these files the same way, but you can
 store them anywhere. I've included an example of this file below.
@@ -178,7 +188,7 @@ namespace Pathos.Models.Settings
 {
     public class AppSecrets
     {
-        public string SamplePassword { get; set; }
+        public string PathosConnectionString { get; set; }
     }
 }
 ```
