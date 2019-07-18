@@ -9,7 +9,7 @@ made him the perfect embodiment of the Greek's idea of Pathos I chose Pathos as 
 
 1. [Environment specific config files and Secrets Manager](./README.config_and_secrets.md)
 2. Setting up Service Providers
-3. Handling Entity Framework Migrations in deployment
+3. [Handling Entity Framework Migrations in deployment](./README.ef_core.md)
 4. Unit Testing Controllers and React Views.
 5. Integrating React.js without loosing ignorning routing options
 6. Deploying service to Azure
