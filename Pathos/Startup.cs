@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Pathos.DAL;
 using Pathos.Models.Mappings;
 using Pathos.Models.Settings;
 
@@ -32,6 +34,11 @@ namespace Pathos
             services.Configure<AppSecrets>(Configuration);
 
             services.AddSingleton(Engine.Mapper);
+
+
+            services.AddDbContext<PathosContext>(
+                options => options.UseSqlite(Configuration["PathosConnectionString"])
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
