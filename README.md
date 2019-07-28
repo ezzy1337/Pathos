@@ -11,7 +11,7 @@ made him the perfect embodiment of the Greek's idea of Pathos and therefore name
 project Pathos.
 
 Before reading these guides make sure you have read the Getting Started section below.
-1. Environment specific config files and Secrets Manager
+1. [Config files and Secrets Manager](./README.config.md)
 2. Unit Testing Controllers and React Views.
 3. Setting up Authentication and Authorization with Auth0
 4. Handling Entity Framework Migrations in deployment
