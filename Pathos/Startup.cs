@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pathos.DAL;
 using Pathos.Models.Mappings;
 using Pathos.Models.Settings;
+using Pathos.Providers.Authorization;
 
 namespace Pathos
 {
@@ -35,6 +38,22 @@ namespace Pathos
 
             services.AddSingleton(Engine.Mapper);
 
+            string domain = $"https://{Configuration["Auth0:domain"]}/";
+            services.AddAuthentication(opts => {
+                opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(opts => {
+                opts.Authority = domain;
+                opts.Audience = Configuration["Auth0:Identifier"];
+                opts.RequireHttpsMetadata = false;
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("check:health", policy => policy.Requirements.Add(new HasScopeRequirement("check:health", domain)));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, ScopeHandler>();
 
             services.AddDbContext<PathosContext>(
                 options => options.UseSqlite(Configuration["PathosConnectionString"])
@@ -44,6 +63,8 @@ namespace Pathos
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseAuthentication();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
