@@ -4,19 +4,17 @@ Pathos is a Greek word which means suffering, experience or emotion. It is also 
 the 3 modes of persuasion in which one appeals to their audiences emotions. If you have
 ever tried to take something you've learned in a coding tutorial and apply it in a real
 world scenario you know the suffering and experience I'm talking about. I got tired of
-tutorials leaving out the details about managing multiple environments so I wrote "The
-12 Labours of a .NET Developer" to bridge the gap from tutorial to production. I found
-the 12 Labours of Hercules a fitting analogy to this struggle since Hercules' labours
-made him the perfect embodiment of the Greek's idea of Pathos and therefore named the
-project Pathos.
+tutorials leaving me in a place where I felt unequipped to solve problems or create a
+production ready app. Hercules had 12 labors that made him the perfect embodiment of
+pathos. Creating a tutorial that would leave readers feeling empowered was my labors.
 
 Before reading these guides make sure you have read the Getting Started section below.
 1. [Config files and Secrets Manager](./README.config.md)
-2. Unit Testing Controllers and React Views.
+2. [Handling Entity Framework Migrations in deployment](./README.ef_core.md)
 3. Setting up Authentication and Authorization with Auth0
-4. [Handling Entity Framework Migrations in deployment](./README.ef_core.md)
-4. Adding a React.js Frontend
-5. Deploying service to Azure
+4. Unit Testing Controllers.
+5. Adding a React.js Frontend
+6. Deploying service to Azure
 
 ## The Project
 Every tutorial for .NET MVC apps is always for blogs, or a classroom or something that
