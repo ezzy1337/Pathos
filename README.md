@@ -14,7 +14,7 @@ Before reading these guides make sure you have read the Getting Started section 
 1. [Config files and Secrets Manager](./README.config.md)
 2. Unit Testing Controllers and React Views.
 3. Setting up Authentication and Authorization with Auth0
-4. Handling Entity Framework Migrations in deployment
+4. [Handling Entity Framework Migrations in deployment](./README.ef_core.md)
 4. Adding a React.js Frontend
 5. Deploying service to Azure
 
