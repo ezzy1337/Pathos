@@ -18,7 +18,7 @@ that can be run as a full test suite or as separate test suites. It will also pr
 a workflow for creating specific and useful abstractions for testing that will be more
 flexible and reusable than a base test class.
 
-## Creating the test project
+## Creating the unit test project
 ```bash
 # Note execute this in the root directory so PathosTest appears
 # next to Pathos
@@ -91,7 +91,7 @@ that any class that tries to handle the setup for all of the different middlewar
 bloated. Even when testing the scenario where every middleware, and integration does
 exactly what it is supposed to do the test is more like an end-to-end test which is yet
 another step up the testing pyramid. Good integration tests strike a balance between
-using production like data and swapping out dependencies that are not to focus of the
+using production like data and swapping out dependencies that are not the focus of the
 test. For example to test a controller is behind the auth middleware the database doesn't
 need to be seeded with test data, nor do actual queries need to be executed against a
 database.
