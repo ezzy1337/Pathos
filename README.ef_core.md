@@ -1,27 +1,32 @@
 # Entity Framework Core 2.0	(EF Core)
-For the rest of this tutorial we are assuming you will be using EF Core 2.0. That being
-said in February 2019 EF Core 3.0 was announced. If you are not using EF Core 3.0 you
-are missing out on smarter LINQ-to-SQL, and the ability to query DB views. 
 
-<br />
+## Introduction
+The majority of apps out there need to connect with a database. In the context of API's
+and web apps, it is considered a best practice to separate the data access logic from the
+business logic. A common solution is to use an Object Relational Mapping (ORM). Microsoft
+provides the aptly named Entity Framework Core (EF Core) as the ultimate data access 
+technology for any .NET Core app. In this tutorial I am using EF Core 2.0 however, EF
+Core 3.0 which was announced in February 2019 is currently in preview and should be
+released soon. EF Core 3.0 offers smarter LINQ-to-SQL, and the ability to query DB
+views. IF you are familiar with Entity Framework 6, the legacy .NET framework equivalent,
+Microsoft maintains a [feature comparison](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/).
 
-# What is Entity Core though?
-EF Core is an Object Relational Mapping (ORM) technology designed by Microsoft to be the
-ultimate Data Access Technology for any .NET Core app. Currently there is Entity
-Framework 6 (EF 6) which is used in the old .NET Frameworks. Worry not though EF 6 code
-can run on EF Core 3.0. Microsoft maintains a
-[feature comparison](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/) document for
-features from EF 6 to EF Core 3.0.
+Previously I wrote about handling config files and app secrets. During that write up I
+was using a .Net Core Web API for my [Coding Merit Badges Project](https://docs.google.com/document/d/19xM74tFnGaxRqjSH-yxVsPDrpozsqojrKxd7_J7AVMU/edit).
+This write up is going to piggyback off a lot of that code so I suggest reading that
+[article](./README.config.md) first.
 
-<br />
+## Concepts
+For those that are not familiar with ORM's, I wanted to cover a few of the concepts and
+features of an ORM. This section talks about the design pattern used by EF Core, schema
+migrations, and naming conventions understood by EF Core.
 
-# Concepts
-## Design Pattern
-Most ORM’s use a design pattern called the Active Record Pattern. The important thing to
-note about the active record pattern is that any given instance 
-of an entity corresponds to a row/record in the DB.
+### Design Pattern
+EF Core like most ORM’s use the Active Record Design Pattern. The important thing to note
+about this pattern is that any given instance of an entity corresponds to a row/record in
+the database.
 
-For Example the object `me` which is an instance of the `User` class correlates to row 1
+For example, the object `me` which is an instance of the `User` class correlates to row 1
 from the Database.
 ```C#
 Public class User {
@@ -41,16 +46,18 @@ me.DOB = new DateTime(1959, 2, 3);
 | 1 | 1337 | John Jameson | 1959-02-03 |
 | 2 | 1347 | Tester Testofferson | 1936-06-22 |
 
-## Migrations
-One of the most useful features of an ORM is built in handling of database schema changes.
-These are often referred to as `Migrations`. In fact in EF Core that's the command you
-will use (but more on that later) In EF 6 there are 2 ways to handle migrations Database
-First which is not supported in EF Core (yet) and Code First Migrations which are
-supported and what we will be using in this tutorial.
+### Migrations
+One of the most useful features of an ORM is the built-in handling of database schema
+changes. These are often referred to as `Migrations`. In fact, in EF Core that's the
+command you will use, but more on that later. EF Core currently only supports Code First
+Migrations, but support for Database First Migrations is on the roadmap for EF Core. A
+code first migration means the developer (you) defines the classes in code and then uses
+EF Core to generate a SQL script that when applied will cause the database schema to
+match the entities, and relationships defined in code.
 
-## Default Naming Convention
+### Default Naming Convention
 In order to work it's magic EF Core assumes a few naming conventions unless explicitly
-changed using a Data Annotation. I think there are 3 important conventions to cover;
+changed using a Data Annotation. I think there are 3 important conventions to cover.
   - [Table Names](https://docs.microsoft.com/en-us/ef/core/modeling/relational/tables#conventions)
     ```C#
     using System.ComponentModel.DataAnnotations.Schema;
@@ -95,16 +102,20 @@ changed using a Data Annotation. I think there are 3 important conventions to co
     is used by EF Core to serialize the foreign rows into a single C# Object._
 
 
-# Setting up the Data Access Layer (DAL)
-EF Core uses something called a Db Context to coordinate reading and writing data from
-the database, deserializing it into Plain Old C# Objects (POCOs) and serializing it into
-the format expected by your database. Creating the context can happen after you create
-your data model and entities, but I like to set it up first.
+I know that was a lot of theory, but I want you to have all the knowledge necessary to
+make sane choices when preparing your app for production. That being said we are ready
+to start coding our data access layer using EF Core.
+
+## Setting up the Data Access Layer (DAL)
+EF Core uses a Db Context to coordinate reading and writing data from the database,
+deserializing it into Plain Old C# Objects (POCOs) and serializing it into the format
+expected by your database. Creating the context can happen after you create your data
+model and entities, but I like to set it up first.
 
 ### Create Db Context
-Create a new file called `DbContext.cs` under the `Models` folder. Add skeleton of the 
-database context as shown below to that file. More will be added later as we define the
-apps data model.
+Create a new file called `DbContext.cs` under the `Models` folder. Add the skeleton of
+the database context as shown below to `DbContext.cs`. More code will be added later as
+we  continue to define the models for this app.
 ```C#
 using Microsoft.EntityFrameworkCore;
 using Pathos.Models;
@@ -121,21 +132,21 @@ namespace Pathos.Models
 
 ### Register Db Context at Startup
 The Db Context needs to be registered as a service in the `ConfigureServices` method
-defined in the `Startup.cs` file. Now is also the time to select a Database connector
-for whichever DBMS you are using. The list of provided connectors can be found
-[here](https://docs.microsoft.com/en-us/ef/core/providers/). I've chosen Sqlite just
-for simplicity.
+defined in `Startup.cs`. This is also when you will be committing to a specific database.
+There are ways to change your mind later but that's a topic for another time. For now, 
+you can see which adapters are available for EF Core [here](https://docs.microsoft.com/en-us/ef/core/providers/).
+I chose SQLite just for simplicity.
 
-Import `Microsoft.EntityFrameworkCore` in Startup.cs and add the following code to the
-end of the `ConfigureServices` method to register the Db Context.
-
+Add the following code to the `ConfigureServices` method in `Startup.cs` to register the
+Db Context with the app.
 ```C#
 services.AddDbContext<PathosContext>(
     options => options.UseSqlite(Configuration["PathosConnectionString"])
 );
 ```
-_NOTE: You will get the error `'DbContextOptionsBuilder' does not contain a definitionfor 'UseSqlite'`
-if you do not have the correct Package reference in the `*.csproj` file._
+_WARNING: If you get the error "DbContextOptionsBuilder does not contain a definition
+for 'UseSqlite'" you have either forgotten to import `Microsoft.EntityFrameworkCore` or
+you do not have the correct Package reference in the `*.csproj` file._
 
 ### Set the database connection string to app secrets
 If you have not already set the connection string in the Secret Manager do so now with
@@ -144,31 +155,27 @@ the following cli command.
 dotnet user-secrets set "PathosConnectionString" "Data Source=Pathos.db"
 ```
 
-Finally all the boilerplate stuff is out of the way and we can start creating the data
-model.
-
-# Schema Modeling
+## Schema Modeling
 _NOTE: It will be helpful for you to review the [EF Core relationship terminology](https://docs.microsoft.com/en-us/ef/core/modeling/relationships#definition-of-terms)
 provided by microsoft._
 
 There are 3 entities that need to be modeled for the Merit Badge project; `Users`,
 `Badges` and `Accounts` (i.e. GitHub, Gitlab etc.). Technically there is a fourth,
-`UserBadges`, but we'll get to that when we talk more indepth about many-to-many
-relationships. The most important relationships for these entites are outlined below.
+`UserBadges` but we'll get to that when we talk more in-depth about many-to-many
+relationships. The most important relationships for these entities are outlined below.
 
  - A `User` can have 1 or many `Accounts`
  - An `Account` can belong to only 1 `User`
  - A `User` can have 0 to many `Badges`
  - A `Badge` can belong to 0 or many `Users`
- - A `User` can have exactly 0 or 1 of any specifc `Badge`
+ - A `User` can have exactly 0 or 1 of any specific `Badge`
 
 __PROTIP:__
 It's really easy to get caught up in the details when creating the initial migration.
-While learning I recommend a more iterative approach. First define the entities and their
-one-to-one relationships, then go back and add the more complex relationships later. You
+While learning I recommend a more iterative approach. First, define the entities and their
+one-to-one relationships, then go back and add more complex relationships later. You
 will still most likely create a single migration for all of the relationships but they
-can be added to the models and DbContext piece by piece .
-
+can be added to the models and DbContext piece by piece.
 
 ### Data Model 1st Iteration (Entities)
 Create files for each of the entities defined below under the Models folder. Remember an
@@ -200,7 +207,8 @@ public class Badge
 }
 ```
 
-Once the entities are defined they can be added to the DbContext as DbSet objects.
+Entites need to be added to the Db Context so the context is aware of them. This is done
+by defining them as class properties of type DbSet\<model\>.
 ```C#
 public class PathosContext : DbContext
 {
@@ -222,7 +230,8 @@ the following schema requirements can be expressed as one-to-many relationships.
 
 To establish a one-to-many relationship the principal entity (`User`) needs
 a `Collection Navigation Property` to `Accounts`. The dependant entity (`Account`) needs
-a `Inverse Navigation Property`. Update the User class and Account class as shown below.
+an `Inverse Navigation Property` to `User`. Update the User class and Account class as
+shown below.
 ```C#
 [Table("users")]
 public class User {
@@ -247,7 +256,7 @@ public class Account {
 }
 ```
 _NOTE: All it takes is for EF Core to build a relationship by convention is the Reference
-Navigation Property in the Principal Entity, however it is recommended to define the
+Navigation Property in the Principal Entity, however, it is recommended to define the
 relationship with the Foreign Key in the dependent entity._
 
 __WARNING: When there are multiple navigation properties between entities the relationships
@@ -308,10 +317,10 @@ public class Badge
 }
 ```
 
-Now recall the warning that multiple Navigation Properties must be mapped manually? Well
-`UserBadges` is just a case where the relationships have to be mapped manually. To do
+Recall the warning that multiple Navigation Properties must be mapped manually? Well
+`UserBadges` is such a case where the relationships have to be mapped manually. To do
 this the FluentAPI can be used in the DbContext. Add the `onModelCreating` method to the
-PathosContext class in `DAL/DbContext.cs`.
+PathosContext class in `DbContext.cs`.
 ```C#
 protected override void OnModelCreating(ModelBuilder builder)
 {
@@ -333,19 +342,21 @@ protected override void OnModelCreating(ModelBuilder builder)
 
 This configuration also handles the last schema requirement limiting each user to having
 exactly 0 or 1 of any given badge. Since the primary key for the `user_badges` table is
-comprised of UserId, and BadgeId and a primary key mut be unique then only one entry will
+comprised of UserId, and BadgeId and a primary key must be unique then only one entry will
 exist in this table for a user and a specific badge while still allowing multiple users to
 have the same badge.
 
 ### Initial Migration
-Now that the entities and relationships have been defined the 2 step process of creating
-and applying migrations can be started.
+Now that the entities and relationships have been defined, the two-step process of
+creating and applying migrations can be started. From the command line execute the
+following dotnet-cli commands.
 ```bash
 dotnet ef migrations add InitialSchema # Create the initial migration titled InitialSchema
 dotnet ef database update # Applies the update to the database
 ```
 __WARNING:__
-If you get the error `No executable found matching command "dotnet-ef"` add the following to your .csproj file
+If you get the error `No executable found matching command "dotnet-ef"` add the following
+to your `.csproj` file.
 ```xml
 <!--Enables dotnet core cli tools-->
 <ItemGroup>
@@ -353,18 +364,18 @@ If you get the error `No executable found matching command "dotnet-ef"` add the 
 </ItemGroup>
 ```
 
-When the migration has successfully been added a new `Migrations` folder will appear
-under the `Pathos` directory. After successfully updating the database a new file
-`Pathos.db` appears also under the `Pathos` directory. This is a local instance of your
-database, but it is exluded from version control in the `.gitignore` since you should
-never commit your database to version control.
+When the migration has successfully been added a new `Migrations` folder will appear in
+the project's root directory. After successfully updating the database a new file
+`Pathos.db` will also appear in the project's root directory. This is a local instance of
+your database, but it is excluded from version control in the `.gitignore` since you
+should never commit your database to version control.
 
 ### Exploring the Migrations Folder
-At this time when you expand the Migrations folder you will see 3 files
+At this time when you expand the Migrations folder you will see 3 files,
 `PathosContextModelSnapshot`, and 2 that start with timestamps.
  - `<timestamp>_InitialSchema.cs`: The main migration file that defines an `Up` method
    which contains the migration code for updating the database, and a `Down` method which
    contains the code for rollingback the migration.
- - `<timestamp>_InitialSchema.Designer.cs`: A metadata file providing infor for EF Core.
+ - `<timestamp>_InitialSchema.Designer.cs`: A metadata file providing info for EF Core.
  - `PathosContextModelSnapshot.cs`: A snapshot of what the database looks like some changes
    can be determined between migrations.
