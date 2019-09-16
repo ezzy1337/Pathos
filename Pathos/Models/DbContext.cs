@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Pathos.Models.Config;
 
 namespace Pathos.Models {
     public class PathosContext : DbContext
