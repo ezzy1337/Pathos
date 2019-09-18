@@ -184,5 +184,33 @@ The trick is the `using` block that runs the database migrations. This is crucia
 otherwise you will be getting errors about tables not existing.
 
 When it comes to writing tests each test class that needs the databae will inherit
-`IClassFixture<PathosDbApplicationFactory<Pathos.Startup>>` and then have an InMemory
+`IClassFixture<PathosDbApplicationFactory<Pathos.Startup>>` and then have an In-Memory
 database available for seeding data and will be automatically injected into controllers.
+
+```C#
+public class HealthControllerIntegrationTest : IClassFixture<PathosDbApplicationFactory<Pathos.Startup>>
+{
+    private readonly PathosDbApplicationFactory<Pathos.Startup> _factory;
+
+    public HealthControllerIntegrationTest(PathosDbApplicationFactory<Pathos.Startup> factory)
+    {
+        this._factory = factory;
+    }
+
+    [Fact]
+    public async void TestGetHealth()
+    {
+        // Arrange
+        var subject = this._factory.CreateClient();
+
+        // Act
+        var response = await subject.GetAsync("/api/health/db");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+}
+```
+
+The new integration test can be run from the `PathosIntegrationTest` directory using the
+same `dotnet test` command as before.
