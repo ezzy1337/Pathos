@@ -11,7 +11,7 @@ pathos. Creating a tutorial that would leave readers feeling empowered was my la
 Before reading these guides make sure you have read the Getting Started section below.
 1. [Config files and Secrets Manager](./README.config.md)
 2. [Handling Entity Framework Migrations in deployment](./README.ef_core.md)
-3. Unit Testing Controllers
+3. [Unit Testing Controllers](./README.testing.md)
 4. Setting up Authentication and Authorization with Auth0
 5. Adding a React.js Frontend
 6. Deploying service to Azure
