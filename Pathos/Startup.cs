@@ -34,9 +34,9 @@ namespace Pathos
             services.Configure<GitHostingApis>(Configuration.GetSection("GitHostingApis"));
             services.Configure<AppSecrets>(Configuration);
 
-            services.AddDbContext<PathosContext>(
-                options => options.UseSqlite(Configuration["PathosConnectionString"])
-            );
+            // services.AddDbContext<PathosContext>(
+            //     options => options.UseSqlite(Configuration["PathosConnectionString"])
+            // );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
