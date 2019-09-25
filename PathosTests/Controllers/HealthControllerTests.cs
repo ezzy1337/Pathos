@@ -10,7 +10,7 @@ namespace PathosTests.Controllers
         [Fact]
         public void TestGetHealth()
         {
-            var subject = new HealthController(null);
+            var subject = new HealthController();
 
             var actual = subject.Get() as OkObjectResult;
             Assert.Equal(actual.Value, "healthy");

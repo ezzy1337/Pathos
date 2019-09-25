@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,9 +35,15 @@ namespace Pathos
             services.Configure<GitHostingApis>(Configuration.GetSection("GitHostingApis"));
             services.Configure<AppSecrets>(Configuration);
 
-            services.AddDbContext<PathosContext>(
-                options => options.UseSqlite(Configuration["PathosConnectionString"])
-            );
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production") {
+                services .AddDbContext<PathosContext>(
+                    options => options.UseSqlServer(Configuration["PathosConnectionString"])
+                );
+            } else {
+                services.AddDbContext<PathosContext>(
+                    options => options.UseSqlite(Configuration["PathosConnectionString"])
+                );
+            }
 
             services.BuildServiceProvider().GetService<PathosContext>().Database.Migrate();
         }

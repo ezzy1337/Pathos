@@ -8,11 +8,11 @@ namespace Pathos.Controllers
 {
     public class HealthController: Controller
     {
-        // private readonly PathosContext _db;
-        // public HealthController(PathosContext db)
-        // {
-        //     this._db = db;
-        // }
+        private readonly PathosContext _db;
+        public HealthController(PathosContext db)
+        {
+            this._db = db;
+        }
 
         [Route("api/[controller]")]
         [HttpGet]
@@ -20,15 +20,15 @@ namespace Pathos.Controllers
             return Ok("healthy");
         }
 
-        // [Route("api/[controller]/db")]
-        // [HttpGet]
-        // async public Task<IActionResult> GetDbHealth() {
-        //     try {
-        //         var result = await this._db.Users.CountAsync();
-        //         return Ok("healthy");
-        //     } catch (Exception) {
-        //         return StatusCode(500);
-        //     }
-        // }
+        [Route("api/[controller]/db")]
+        [HttpGet]
+        async public Task<IActionResult> GetDbHealth() {
+            try {
+                var result = await this._db.Users.CountAsync();
+                return Ok("healthy");
+            } catch (Exception) {
+                return StatusCode(500);
+            }
+        }
     }
 }
