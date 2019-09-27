@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -36,8 +37,12 @@ namespace Pathos
             services.Configure<AppSecrets>(Configuration);
 
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production") {
+                var connectionStringBuilder = new SqlConnectionStringBuilder(
+                    Configuration.GetConnectionString("PathosConnectionString")
+                );
+                connectionStringBuilder.Password = Configuration["PathosDbPassword"];
                 services .AddDbContext<PathosContext>(
-                    options => options.UseSqlServer(Configuration["PathosConnectionString"])
+                    options => options.UseSqlServer(connectionStringBuilder.ConnectionString)
                 );
             } else {
                 services.AddDbContext<PathosContext>(
