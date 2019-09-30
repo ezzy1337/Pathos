@@ -37,12 +37,15 @@ namespace Pathos
             services.Configure<AppSecrets>(Configuration);
 
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production") {
-                var connectionStringBuilder = new SqlConnectionStringBuilder(
-                    Configuration.GetConnectionString("PathosConnectionString")
-                );
-                connectionStringBuilder.Password = Configuration["PathosDbPassword"];
-                services .AddDbContext<PathosContext>(
-                    options => options.UseSqlServer(connectionStringBuilder.ConnectionString)
+                // var connectionStringBuilder = new SqlConnectionStringBuilder(
+                //     Configuration.GetConnectionString("PathosConnectionString")
+                // );
+                // connectionStringBuilder.Password = Configuration["PathosDbPassword"];
+                // services .AddDbContext<PathosContext>(
+                //     options => options.UseSqlServer(connectionStringBuilder.ConnectionString)
+                // );
+                services.AddDbContext<PathosContext>(
+                    options => options.UseSqlServer(Configuration.GetConnectionString("PathosConnectionString"))
                 );
             } else {
                 services.AddDbContext<PathosContext>(
@@ -50,7 +53,7 @@ namespace Pathos
                 );
             }
 
-            services.BuildServiceProvider().GetService<PathosContext>().Database.Migrate();
+            // services.BuildServiceProvider().GetService<PathosContext>().Database.Migrate();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
